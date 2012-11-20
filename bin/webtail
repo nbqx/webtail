@@ -6,6 +6,7 @@ slop = Slop.new(:strict => true, :help => true)
 slop.banner "$ tail -f ... | webtail [options]"
 slop.on :p, :port=, "port number for http server (default is 9999)"
 slop.on :r, :rc=, 'callback file location (default is ~/.webtailrc)'
+slop.on :a, :after_start=, 'after start callback file'
 begin
   slop.parse!(argv)
 rescue => e
@@ -17,6 +18,7 @@ options.delete(:help)
 options[:port] ||= 9999
 
 options[:rc] ||= "~/.webtailrc"
+options[:after_start] ||= nil
 
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 require "webtail"

@@ -1,14 +1,24 @@
+# -*- coding: utf-8 -*-
 module Webtail
   module App
     extend self
 
     def run
+      
+      unless Webtail.config[:after_start].nil?
+        begin
+          cb = eval(File.read(Webtail.config[:after_start]), binding)
+        rescue
+          ## do nothing
+        end
+      end
+
       ::Rack::Handler::WEBrick.run(
         Server.new,
         :Port          => Webtail.config[:port],
         :Logger        => ::WEBrick::Log.new("/dev/null"),
         :AccessLog     => [nil, nil],
-        :StartCallback => proc { App.open_browser }
+        :StartCallback => cb || proc { App.open_browser }
       )
     end
 
