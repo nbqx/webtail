@@ -7,7 +7,8 @@ module Webtail
       
       unless Webtail.config[:after_start].nil?
         begin
-          cb = eval(File.read(Webtail.config[:after_start]), binding)
+          code = File.read(Webtail.config[:after_start])
+          cb = eval("proc { #{code} }", binding)
         rescue
           ## do nothing
         end
